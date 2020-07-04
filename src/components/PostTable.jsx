@@ -49,7 +49,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PostTable() {
+export default function PostTable({page, rowsPerPage, rows, handleChangePage, handleChangeRowsPerPage}) {
   const classes = useStyles();
   const style = {
     // border: '1px solid black',
