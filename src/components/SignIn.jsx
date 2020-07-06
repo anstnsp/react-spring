@@ -13,7 +13,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Login from "./Login";
-
+import {
+  GOOGLE_AUTH_URL,
+  FACEBOOK_AUTH_URL,
+  GITHUB_AUTH_URL,
+  ACCESS_TOKEN,
+} from "../constants";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -96,9 +101,8 @@ export default function SignIn() {
           >
             로그인
           </Button>
-          <div style={{ width: "1000" }}>
-            <Login></Login>
-          </div>
+          <a href={GOOGLE_AUTH_URL}>구글로긴?</a>
+          <Login></Login>
 
           <Grid container>
             <Grid item xs>

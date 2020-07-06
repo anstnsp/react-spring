@@ -4,7 +4,7 @@ import Appbar from "../components/Appbar";
 import Main from "../components/Main";
 
 const Home = () => {
-  return <AppTemplate appbar={<Appbar />} body={<Main />} />;
+  return <Main />;
 };
 
 export default Home;

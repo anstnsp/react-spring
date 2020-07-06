@@ -53,7 +53,7 @@ export default function ButtonAppBar() {
             </Link>
           </Typography>
 
-          <Link style={style} to="/auth/signin">
+          <Link style={style} to="/signin">
             <Button color="inherit">로그인</Button>
           </Link>
           <Button color="inherit">회원가입</Button>

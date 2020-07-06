@@ -1,9 +1,9 @@
 import React from "react";
 
-const AppTemplate = ({ appbar, left, body, right, bottom }) => {
+const AppTemplate = ({ header, left, body, right, bottom }) => {
   return (
     <div className="app-template">
-      <div className="appbar">{appbar}</div>
+      <div className="header">{header}</div>
       <div className="left">{left}</div>
       <div className="body">{body}</div>
       <div className="right">{right}</div>
