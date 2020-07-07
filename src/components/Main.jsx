@@ -6,6 +6,10 @@ const Main = () => {
     <div>
       <div>여긴 메인</div>
       <Login></Login>
+      <div>
+        <h1>profile</h1>
+        <p></p>
+      </div>
     </div>
   );
 };

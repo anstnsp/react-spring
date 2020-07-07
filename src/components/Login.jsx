@@ -68,6 +68,8 @@ const Login = () => {
         onSuccess={responseGoogle} //성공콜백
         onFailure={responseFail} //실패콜백
         cookiePolicy={"single_host_origin"}
+        // accessType="offline"
+        // responseType="token"
       />
       {/* <GoogleLogout
       clientId="256564752132-vc63t09lj5gd6k9tgsdkompnc6tanquq.apps.googleusercontent.com"

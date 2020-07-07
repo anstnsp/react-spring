@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,24 +13,25 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Login from "./Login";
+import { login } from "../util/APIUtils";
 import {
   GOOGLE_AUTH_URL,
   FACEBOOK_AUTH_URL,
   GITHUB_AUTH_URL,
   ACCESS_TOKEN,
 } from "../constants";
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        문수의홈페이지
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// function Copyright() {
+//   return (
+//     <Typography variant="body2" color="textSecondary" align="center">
+//       {"Copyright © "}
+//       <Link color="inherit" href="https://material-ui.com/">
+//         문수의홈페이지
+//       </Link>{" "}
+//       {new Date().getFullYear()}
+//       {"."}
+//     </Typography>
+//   );
+// }
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,75 +53,125 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn({ authenticated, currentUser }) {
   const classes = useStyles();
+  console.log(`signin페이지 authenticated값:${authenticated}`);
+  console.log(`access_token:${ACCESS_TOKEN}`);
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          환영합니다!
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            로그인
-          </Button>
-          <a href={GOOGLE_AUTH_URL}>구글로긴?</a>
-          <Login></Login>
+  const [signinForm, setSigninForm] = useState({
+    email: "",
+    password: "",
+  });
+  const { email, password } = signinForm;
 
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                비밀번호를 잊으셨나요?
-              </Link>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(`name:${name}, value: ${value}`);
+    setSigninForm({
+      ...signinForm,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    console.log("11111");
+    e.preventDefault();
+    console.log("2222");
+    login(signinForm)
+      .then((response) => {
+        localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+        alert.success("You're successfully logged in!");
+        this.props.history.push("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(
+          (error && error.message) ||
+            "Oops! Something went wrong. Please try again!",
+        );
+      });
+  };
+  if (authenticated) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/",
+          state: { from: location },
+        }}
+      />
+    );
+  } else {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            환영합니다!
+            <div>{authenticated}</div>
+            <div>{currentUser}</div>
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              value={email}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={handleChange}
+            />
+            <TextField
+              value={password}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={handleChange}
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              onClick={handleSubmit}
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              로그인
+            </Button>
+            <a href={GOOGLE_AUTH_URL}>Google with Login</a>
+            <Login></Login>
+
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  비밀번호를 잊으셨나요?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"회원가입"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"회원가입"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+          </form>
+        </div>
+        <Box mt={8}></Box>
+      </Container>
+    );
+  }
 }

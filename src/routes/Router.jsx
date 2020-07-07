@@ -1,8 +1,22 @@
-import React, { useState } from "react";
-import { Home, AboutPage, Posts, SignIn, NotFound } from ".";
+import React, { useState, useEffect } from "react";
+import {
+  Home,
+  AboutPage,
+  Posts,
+  SignIn,
+  NotFound,
+  Profile,
+  OAuth2RedirectHandler,
+  test,
+} from ".";
 import { Route, Switch } from "react-router-dom";
 import AppTemplate from "../components/AppTemplate";
 import AppBar from "../components/Appbar";
+import { getCurrentUser } from "../util/APIUtils";
+// import OAuth2RedirectHandler from "../components/user/oauth2/OAuth2RedirectHandler";
+import Copyright from "../components/common/Copyright";
+import PrivateRoute from "../components/common/PrivateRoute";
+
 // 라우트로 설정한 컴포넌트는, 3가지의 props 를 전달받게 됩니다:여기서는 Home,과 About
 
 // history 이 객체를 통해 push, replace 를 통해 다른 경로로 이동하거나 앞 뒤 페이지로 전환 할 수 있습니다.
@@ -22,23 +36,26 @@ const Router = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    console.log(`componentDidMount START!`);
+    loadCurrentlyLoggedInUser();
+  }, []);
+
   const loadCurrentlyLoggedInUser = () => {
     setLoading(!loading);
   };
 
-  // getCurrentUser()
-  //   .then((response) => {
-  //     this.setState({
-  //       currentUser: response,
-  //       authenticated: true,
-  //       loading: false,
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     this.setState({
-  //       loading: false,
-  //     });
-  //   });
+  getCurrentUser()
+    .then((response) => {
+      console.log(`response: ${response}`);
+      setCurrentUser(response);
+      setAutenticated(true);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.log(`getCurrentUser() error:${error}`);
+      setLoading(false);
+    });
 
   const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN);
@@ -52,7 +69,16 @@ const Router = () => {
       header={<AppBar />}
       body={
         <Switch>
+          <Route path="/test" component={test} />
+          <Route path="/oauth2" component={OAuth2RedirectHandler} />
           <Route exact path="/" component={Home} />
+
+          <PrivateRoute
+            path="/profile"
+            authenticated={authenticated}
+            currentUser={currentUser}
+            component={Profile}
+          ></PrivateRoute>
           {/* Switch 컴포넌트를 사용하는건데요, 라우트들을 이 컴포넌트에 감싸면 매칭되는 첫번째 라우트만 보여주고 나머지는 보여주지 않습니다. */}
           <Route path="/about" component={AboutPage} />
           <Route path="/posts" component={Posts} />
@@ -66,9 +92,11 @@ const Router = () => {
               />
             )}
           />
+
           <Route component={NotFound} />
         </Switch>
       }
+      bottom={<Copyright />}
     />
   );
 };

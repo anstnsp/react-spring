@@ -1,7 +1,8 @@
 import React from "react";
 
 const Profile = ({ currentUser }) => {
-  return <div>email: {currentUser.email}</div>;
+  const { email } = currentUser;
+  return <div>email: {email}</div>;
 };
 
 export default Profile;
