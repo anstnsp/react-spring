@@ -10,6 +10,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PostInsertBtn from "../components/PostInsertBtn";
 
 const columns = [
   { id: "id", label: "No", minWidth: 50 },
@@ -49,7 +50,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PostTable({page, rowsPerPage, rows, handleChangePage, handleChangeRowsPerPage}) {
+export default function PostTable({
+  page,
+  rowsPerPage,
+  rows,
+  handleChangePage,
+  handleChangeRowsPerPage,
+}) {
   const classes = useStyles();
   const style = {
     // border: '1px solid black',
@@ -117,6 +124,7 @@ export default function PostTable({page, rowsPerPage, rows, handleChangePage, ha
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      <PostInsertBtn />
     </Paper>
   );
 }

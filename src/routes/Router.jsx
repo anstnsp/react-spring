@@ -53,7 +53,10 @@ const Router = () => {
       setLoading(false);
     })
     .catch((error) => {
-      console.log(`getCurrentUser() error:${error}`);
+      console.log(`Router.getCurrentUser() error!`);
+      console.log(`error.status: ${error.status}`);
+      console.log(`error.message : ${error.message}`);
+      console.log(`error.error: ${error.error} `);
       setLoading(false);
     });
 
@@ -69,10 +72,7 @@ const Router = () => {
       header={<AppBar />}
       body={
         <Switch>
-          <Route path="/test" component={test} />
-          <Route path="/oauth2" component={OAuth2RedirectHandler} />
           <Route exact path="/" component={Home} />
-
           <PrivateRoute
             path="/profile"
             authenticated={authenticated}
@@ -92,7 +92,7 @@ const Router = () => {
               />
             )}
           />
-
+          <Route path="/oauth2" component={OAuth2RedirectHandler} />
           <Route component={NotFound} />
         </Switch>
       }
